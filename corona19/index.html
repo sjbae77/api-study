@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+
+    <link rel="stylesheet" href="./assets/css/nanumbarungothic/nanumbarungothicsubset.css">
+    <link rel="stylesheet" href="./assets/css/open-sans/open-sans.css">
+    <link rel="stylesheet" href="./assets/styles/kendo.common.min.css">
+    <!--    <link rel="stylesheet" href="/assets/styles/kendo.common-material.min.css">-->
+    <!--    <link rel="stylesheet" href="/assets/styles/kendo.mobile.all.min.css">-->
+    <!--    <link rel="stylesheet" href="/assets/styles/kendo.dataviz.min.css">-->
+    <link rel="stylesheet" href="./assets/styles/kendo.silver.min.css">
+    <!--    <link rel="stylesheet" href="/assets/styles/kendo.dataviz.material.min.css">-->
+    <link rel="stylesheet" href="./assets/css/font-awesome/css/font-awesome.css">
+
+    <script src="./assets/js/jquery.min.js"></script>
+    <script src="./assets/js/kendo.all.min.js"></script>
+    <script src="./assets/js/jszip.min.js"></script>
+    <script src="./assets/js/kendo.messages.ko-KR.min.js"></script>
+    <script src="./assets/js/kendo.culture.ko-KR.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-latest.min.js"></script> -->
+
+    <!-- <link rel="stylesheet" href="./view/css/common.css"> -->
+
+    <title>코로나 발생자 현황</title>
+
+    <style>
+        .display-block {
+            display: block !important;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .covid-list__button {
+            height: 30px;
+        }
+
+        .covid-list-container {
+            display: none;
+            margin-top: 10px;
+            font-size: 20px;
+            line-height: 32px;
+        }
+        .title {
+            margin-bottom: 10px;
+        }
+
+        #covid__grid { 
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button class="covid-list__button">확진자 내역 보기</button>
+        <div class="covid-list-container">
+            <div class="title"></div>
+            <div class="yesterday__count">
+                전일 신규합계 확진자 수 : <span class="content"></span>
+            </div>
+            <div class="total__count">
+                누적 확진자 수 : <span class="content"></span>
+            </div>
+            <div class="recover-count">
+                누적 완치자 수 : <span class="content"></span>
+            </div>
+        </div>
+
+        <div id="covid__grid"></div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+
+            let yesterdayCount = "-";
+            let TotalCount = "-";
+            let recoverCount = "-";
+
+            function convertComma(target) {
+                const format = target.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+
+                return format;
+            };
+
+            function getCovidList() {
+                $(".covid-list-container").addClass("display-block");
+
+                $.ajax({
+                    type: "GET",
+                    url: "https://api.corona-19.kr/korea/beta/?serviceKey=uw2OQ1SB9NyEMhfdqGUcaHlXD6znjT5CP",
+                    data: JSON.stringify(Request),
+                    dataType: 'json',
+                    async: false,
+                    success: function (result) {
+                        console.log(result);
+
+                        const updateTime = result.API.updateTime;
+
+                        yesterdayCount = convertComma(result.korea.incDec);
+                        TotalCount = convertComma(result.korea.totalCnt);
+                        recoverCount = convertComma(result.korea.recCnt);
+
+                        $(".title").html(`[ ${updateTime} ]`);
+                        $(".yesterday__count .content").html(yesterdayCount);
+                        $(".total__count .content").html(TotalCount);
+                        $(".recover-count .content").html(recoverCount);
+
+                        covidGrid.dataSource.read();
+                    },
+                    error: function (xhr, status, error) {
+                        alert("일시적인 오류가 발생했습니다.");
+                        console.log(xhr + status + error);
+                    },
+                });
+            };
+
+            const covidGrid = $("#covid__grid").kendoGrid({
+                columns: [
+                    {
+                        field: "korea_incDec",
+                        title: "전일 신규 확진자 수",
+                        template: function(e) {
+                            return yesterdayCount;
+                        }
+                    },
+                    {
+                        field: "korea_totalCnt",
+                        title: "누적 확진자 수",
+                        template: function(e) {
+                            return TotalCount;
+                        }
+                    },
+                    {
+                        field: "korea_qurRate",
+                        title: "누적 완치자 수",
+                        template: function(e) {
+                            return recoverCount;
+                        }
+                    }
+                ],
+                dataSource: [
+                    {korea_incDec: "", korea_totalCnt: "" , korea_qurRate: "" },
+                ],
+                scrollable: false,
+            }).data("kendoGrid");
+
+            $(".covid-list__button").click(function () {
+                getCovidList();
+            });
+
+            // let covidDS = new kendo.data.DataSource({
+            //     transport: {
+            //         read: {
+            //             url: "https://api.corona-19.kr/korea/beta/?serviceKey=uw2OQ1SB9NyEMhfdqGUcaHlXD6znjT5CP",
+            //             dataType: "json",
+            //             type: "GET"
+            //         },
+            //         schema: {
+            //             model: {
+            //                 fields: {
+            //                     API: { type: "string" },
+            //                 }
+            //             },
+            //         }
+            //     }
+            // });
+        });
+
+    </script>
+
+</body>
+
+</html>
