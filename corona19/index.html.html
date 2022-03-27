@@ -60,14 +60,14 @@
         <button class="covid-list__button">확진자 내역 보기</button>
         <div class="covid-list-container">
             <div class="title"></div>
-            <div class="today__count">
+            <div class="yesterday__count">
                 전일 신규합계 확진자 수 : <span class="content"></span>
             </div>
-            <div class="today-total__count">
+            <div class="total__count">
                 누적 확진자 수 : <span class="content"></span>
             </div>
-            <div class="percentage">
-                누적 발생률 : <span class="content"></span>
+            <div class="recover-count">
+                누적 완치자 수 : <span class="content"></span>
             </div>
         </div>
 
@@ -77,9 +77,9 @@
     <script>
         $(document).ready(function () {
 
-            let todayCount = "-";
-            let todayTotalCount = "-";
-            let percentage = "-";
+            let yesterdayCount = "-";
+            let TotalCount = "-";
+            let recoverCount = "-";
 
             function convertComma(target) {
                 const format = target.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
@@ -101,20 +101,16 @@
 
                         const updateTime = result.API.updateTime;
 
-                        todayCount = result.korea.incDec;
-                        todayTotalCount = result.korea.totalCnt;
-                        percentage = result.korea.qurRate;
+                        yesterdayCount = convertComma(result.korea.incDec);
+                        TotalCount = convertComma(result.korea.totalCnt);
+                        recoverCount = convertComma(result.korea.recCnt);
 
                         $(".title").html(`[ ${updateTime} ]`);
-                        $(".today__count .content").html(convertComma(todayCount));
-                        $(".today-total__count .content").html(convertComma(todayTotalCount));
-                        $(".percentage .content").html(`${convertComma(percentage)}%`);
+                        $(".yesterday__count .content").html(yesterdayCount);
+                        $(".total__count .content").html(TotalCount);
+                        $(".recover-count .content").html(recoverCount);
 
-
-                        covidGrid.dataSource._data[0].korea_incDec = todayCount;
                         covidGrid.dataSource.read();
-
-                        return;
                     },
                     error: function (xhr, status, error) {
                         alert("일시적인 오류가 발생했습니다.");
@@ -122,6 +118,36 @@
                     },
                 });
             };
+
+            const covidGrid = $("#covid__grid").kendoGrid({
+                columns: [
+                    {
+                        field: "korea_incDec",
+                        title: "전일 신규 확진자 수",
+                        template: function(e) {
+                            return yesterdayCount;
+                        }
+                    },
+                    {
+                        field: "korea_totalCnt",
+                        title: "누적 확진자 수",
+                        template: function(e) {
+                            return TotalCount;
+                        }
+                    },
+                    {
+                        field: "korea_qurRate",
+                        title: "누적 완치자 수",
+                        template: function(e) {
+                            return recoverCount;
+                        }
+                    }
+                ],
+                dataSource: [
+                    {korea_incDec: "", korea_totalCnt: "" , korea_qurRate: "" },
+                ],
+                scrollable: false,
+            }).data("kendoGrid");
 
             $(".covid-list__button").click(function () {
                 getCovidList();
@@ -143,36 +169,6 @@
             //         }
             //     }
             // });
-
-            const covidGrid = $("#covid__grid").kendoGrid({
-                columns: [
-                    {
-                        field: "korea_incDec",
-                        title: "전일 신규 확진자 수",
-                        template: function(e) {
-                            return convertComma(todayCount);
-                        }
-                    },
-                    {
-                        field: "korea_totalCnt",
-                        title: "누적 확진자 수",
-                        template: function(e) {
-                            return convertComma(todayTotalCount);
-                        }
-                    },
-                    {
-                        field: "korea_qurRate",
-                        title: "누적 발생률",
-                        template: function(e) {
-                            return convertComma(`${percentage}%`);
-                        }
-                    }
-                ],
-                dataSource: [
-                    {korea_incDec: todayCount, korea_totalCnt: todayTotalCount , korea_qurRate: percentage },
-                ],
-                scrollable: false,
-            }).data("kendoGrid");
         });
 
     </script>
