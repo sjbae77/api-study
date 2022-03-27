@@ -1,0 +1,11 @@
+
+@font-face{font-family:"Open Sans";src:url(Light/OpenSans-Light.woff2?v=1.101) format("woff2"),url(Light/OpenSans-Light.woff?v=1.101) format("woff");font-weight:300;font-style:normal}
+@font-face{font-family:"Open Sans";src:url(LightItalic/OpenSans-LightItalic.woff2?v=1.101) format("woff2"),url(LightItalic/OpenSans-LightItalic.woff?v=1.101) format("woff");font-weight:300;font-style:italic}
+@font-face{font-family:"Open Sans";src:url(Regular/OpenSans-Regular.woff2?v=1.101) format("woff2"),url(Regular/OpenSans-Regular.woff?v=1.101) format("woff");font-weight:400;font-style:normal}
+@font-face{font-family:"Open Sans";src:url(Italic/OpenSans-Italic.woff2?v=1.101) format("woff2"),url(Italic/OpenSans-Italic.woff?v=1.101) format("woff");font-weight:400;font-style:italic}
+@font-face{font-family:"Open Sans";src:url(SemiBold/OpenSans-SemiBold.woff2?v=1.101) format("woff2"),url(SemiBold/OpenSans-SemiBold.woff?v=1.101) format("woff");font-weight:600;font-style:normal}
+@font-face{font-family:"Open Sans";src:url(SemiboldItalic/OpenSans-SemiBoldItalic.woff2?v=1.101) format("woff2"),url(SemiBoldItalic/OpenSans-SemiBoldItalic.woff?v=1.101) format("woff");font-weight:600;font-style:italic}
+@font-face{font-family:"Open Sans";src:url(Bold/OpenSans-Bold.woff2?v=1.101) format("woff2"),url(Bold/OpenSans-Bold.woff?v=1.101) format("woff");font-weight:700;font-style:normal}
+@font-face{font-family:"Open Sans";src:url(BoldItalic/OpenSans-BoldItalic.woff2?v=1.101) format("woff2"),url(BoldItalic/OpenSans-BoldItalic.woff?v=1.101) format("woff");font-weight:700;font-style:italic}
+@font-face{font-family:"Open Sans";src:url(ExtraBold/OpenSans-ExtraBold.woff2?v=1.101) format("woff2"),url(ExtraBold/OpenSans-ExtraBold.woff?v=1.101) format("woff");font-weight:800;font-style:normal}
+@font-face{font-family:"Open Sans";src:url(ExtraBoldItalic/OpenSans-ExtraBoldItalic.woff2?v=1.101) format("woff2"),url(ExtraBoldItalic/OpenSans-ExtraBoldItalic.woff?v=1.101) format("woff");font-weight:800;font-style:italic}
